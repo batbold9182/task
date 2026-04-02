@@ -3,6 +3,7 @@ import { searchBooks, getCoverUrl } from './api.js';
 import { getFavorites, addFavorite, removeFavorite, isFavorite } from './favorites.js';
 
 const searchInput = document.getElementById('search-input');
+const authorInput = document.getElementById('author-input');
 const searchBtn = document.getElementById('search-btn');
 const searchResults = document.getElementById('search-results');
 const favoritesList = document.getElementById('favorites-list');
@@ -170,7 +171,8 @@ async function handleSearch() {
   }
   showStatus('Loading...');
   try {
-    const books = await searchBooks(query);
+    const author = authorInput.value.trim();
+    const books = await searchBooks(query, author);
     if (books.length === 0) {
       showStatus('No books found. Try a different search term.');
       return;
@@ -184,6 +186,9 @@ async function handleSearch() {
 
 searchBtn.addEventListener('click', handleSearch);
 searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') handleSearch();
+});
+authorInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') handleSearch();
 });
 

@@ -1,20 +1,19 @@
-const BASE = import.meta.env.DEV ? '/api' : 'https://openlibrary.org';
+const BASE = 'https://openlibrary.org';
 const COVER_BASE = 'https://covers.openlibrary.org/b/id';
 
-export async function searchBooks(query) {
-  const url = `${BASE}/search.json?q=${encodeURIComponent(query)}&limit=20`;
-  const response = await fetch(url, {
-    headers: { 'Accept': 'application/json' },
-  });
-  if (!response.ok) {
-    throw new Error(`HTTP error: ${response.status}`);
-  }
-  const data = await response.json();
-  return data.docs.map(doc => ({
+export async function searchBooks(query, author = '') {
+  const params = new URLSearchParams({ q: query, limit: '20' });
+  if (author) params.set('author', author);
+
+  const res = await fetch(`${BASE}/search.json?${params}`);
+  if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+  const data = await res.json();
+
+  return (data.docs || []).map(doc => ({
     key: doc.key,
-    title: doc.title || 'Unknown Title',
-    authors: doc.author_name ? doc.author_name.join(', ') : 'Unknown Author',
-    year: doc.first_publish_year || null,
+    title: doc.title,
+    authors: (doc.author_name || []).join(', '),
+    year: doc.first_publish_year ? String(doc.first_publish_year) : '',
     coverId: doc.cover_i || null,
   }));
 }

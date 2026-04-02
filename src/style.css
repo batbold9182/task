@@ -83,7 +83,7 @@ body {
 .search-bar {
   display: flex;
   align-items: center;
-  max-width: 520px;
+  max-width: 640px;
   margin: 0 auto;
   background: #fff;
   border: 1px solid #ddd;
@@ -110,6 +110,11 @@ body {
 
 .search-bar input::placeholder {
   color: #bbb;
+}
+
+#author-input {
+  border-left: 1px solid #ddd;
+  padding-left: 8px;
 }
 
 .search-bar button {
